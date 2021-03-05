@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+    <title>
+        Arch package viz
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link rel="stylesheet" href="./style.css">
+
+    <script type="text/javascript" src="./node_modules/vivagraphjs/dist/vivagraph.js"></script>
+    <script type="text/javascript" src="./searcher.js"></script>
+    <script type="text/javascript">
+        function main() {
+
+            var graph = Viva.Graph.graph();
+            graph.addLink(1, 2)
+
+            // Set custom nodes appearance
+            var graphics = Viva.Graph.View;
+
+            var renderer = Viva.Graph.View.renderer(graph);
+
+            renderer.run();
+        }
+    </script>
+    <style type="text/css" media="screen">
+        html,
+        body,
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body onload='main()'>
+<div class="container">
+    <form class="form-floating mt-3" onsubmit="search()">
+        <input type="text" id="packageInput" class="form-control" placeholder="">
+        <label for="packageInput">Package</label>
+        <button type="button" onclick="search()" class="btn btn-primary mt-1">Draw</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
