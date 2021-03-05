@@ -3,7 +3,7 @@ function search() {
     const packageName = document.getElementById('packageInput').value;
     const proxy = 'https://cors-anywhere.herokuapp.com/'
     fetch(
-        proxy + "https://archlinux.org/packages/search/json/?name=pandoc", {
+        proxy + "https://archlinux.org/packages/search/json/?name=" + packageName, {
             method: 'GET',
             mode: 'cors',
             headers: {
