@@ -1,30 +1,19 @@
 function search() {
 
     const packageName = document.getElementById('packageInput').value;
-
-    //define repositorys to search
-    var repositorys = ['community', 'community-testing', 'core', 'extra', 'testing'];
-
-    const Http = new XMLHttpRequest();
-    const urlPattern = 'https://archlinux.org/packages/search/json'
-
-    for (const i in repositorys) {
-        const repo = repositorys[i];
-
-        Http.open('GET', urlPattern, true);
-
-        Http.setRequestHeader('Access-Control-Allow-Origin', '*');
-        Http.setRequestHeader('Access-Control-Allow-Headers', '*');
-        Http.setRequestHeader('Content-Type', 'application/json');
-
-        Http.onreadystatechange = (ev) => {
-
-            if (this.readyState === 4 && this.status === 400) {
-                console.log(`package ${packageName} not found.`)
-            } else if (this.readyState === 4 && this.status === 200) {
-                console.log(`package ${packageName} found in repository ${repo}.`)
+    const proxy = 'https://cors-anywhere.herokuapp.com/'
+    fetch(
+        proxy + "https://archlinux.org/packages/search/json/?name=pandoc", {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json',
             }
         }
-        Http.send(JSON.stringify({name: packageName}));
-    }
+    )
+        .then(response => response.json())
+        .then(json => console.log(json['results'][0]['url']))
+        .catch(error =>
+            console.error(error)
+        );
 }
