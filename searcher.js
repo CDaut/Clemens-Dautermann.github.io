@@ -1,4 +1,7 @@
-function search(packageName) {
+function search(pPackageName) {
+
+    //remove version declarations because the api cannot handle that
+    let packageName = pPackageName.replace(/(>|>=|=).*/, '');
 
     const proxy = 'https://archviz-proxy.herokuapp.com/'
 

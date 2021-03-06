@@ -18,6 +18,12 @@
     <script type="text/javascript">
         function addSearchFunction() {
             document.getElementById('searchbutton').setAttribute('onclick', 'drawgraph()')
+
+            document.getElementById('packageInput').addEventListener('keyup', (ev => {
+                if (ev.key === 'Enter') {
+                    drawgraph();
+                }
+            }));
         }
 
         document.addEventListener("DOMContentLoaded", addSearchFunction);
