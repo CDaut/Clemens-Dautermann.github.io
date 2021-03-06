@@ -1,8 +1,8 @@
-function search() {
+async function search(packageName) {
 
-    const packageName = document.getElementById('packageInput').value;
-    const proxy = 'https://cors-anywhere.herokuapp.com/'
-    fetch(
+    const proxy = 'https://archviz-proxy.herokuapp.com/'
+
+    return await fetch(
         proxy + "https://archlinux.org/packages/search/json/?name=" + packageName, {
             method: 'GET',
             mode: 'cors',
@@ -12,7 +12,9 @@ function search() {
         }
     )
         .then(response => response.json())
-        .then(json => console.log(json['results'][0]['url']))
+        .then(json => {
+            return json['results'][0]['depends'];
+        })
         .catch(error =>
             console.error(error)
         );
