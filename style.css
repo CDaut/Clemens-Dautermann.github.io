@@ -4,6 +4,17 @@
 
 body {
     overflow: hidden;
+    background-color: #1d1d1d;
+}
+
+#packageInput{
+    background-color: #414141;
+    border: #717171;
+    color: #e1e1e1;
+}
+
+label{
+    color: #e1e1e1;
 }
 
 html,
