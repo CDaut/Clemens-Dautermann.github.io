@@ -122,6 +122,8 @@
                     return "#008bc6"
                 case 'community':
                     return '#b90000'
+                case 'multilib':
+                    return '#d07603'
                 default:
                     return '#ffffff'
             }
@@ -164,10 +166,15 @@
         </div>
         <div class="col  mt-3 mb-3">
             <div class="row">
-                <span style="color: #008bc6">Core packages</span>
-                <span style="color: #5baa00">Extra packages</span>
-                <span style="color: #b90000">Community packages</span>
-                <span style="color: #ffffff">Unresolvable packages (most likely .so files)</span>
+                <div class="col">
+                    <span style="color: #008bc6">Core packages</span>
+                    <span style="color: #5baa00">Extra packages</span>
+                    <span style="color: #b90000">Community packages</span>
+                </div>
+                <div class="col">
+                    <span style="color: #d07603">Multilib packages</span>
+                    <span style="color: #ffffff">Unresolvable packages (most likely .so files)</span>
+                </div>
             </div>
         </div>
     </div>
