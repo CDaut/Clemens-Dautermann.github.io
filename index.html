@@ -13,6 +13,11 @@
 
 
     <link rel="stylesheet" href="./style.css">
+    <style id="NodeStyle">
+        .toggleNodeVisibility {
+            display: none;
+        }
+    </style>
 
     <script type="text/javascript" src="./dist/vivagraph.js"></script>
     <script type="text/javascript" src="./searcher.js"></script>
@@ -29,6 +34,15 @@
 
         document.addEventListener("DOMContentLoaded", addSearchFunction);
     </script>
+    <script type="text/javascript">
+        function toggleLabels() {
+            if (!document.getElementById('ShowLabels').checked) {
+                document.getElementById('NodeStyle').innerText = ".toggleNodeVisibility{display: none;}";
+            } else {
+                document.getElementById('NodeStyle').innerText = ".toggleNodeVisibility{display: block;}";
+            }
+        }
+    </script>
     <script>
         async function drawgraph() {
 
@@ -38,8 +52,11 @@
 
             const packageName = document.getElementById('packageInput').value;
 
+            graph.addNode(packageName);
+
             await addSubteree(packageName, graph, new Set());
 
+            let domLabels = new Set();
 
             // Set custom nodes appearance
             const graphics = Viva.Graph.View.webglGraphics();
@@ -50,6 +67,34 @@
                     dragCoeff: 0.01,
                     gravity: -5
                 });
+
+            graphics.placeNode((ui, pos) => {
+
+                if (typeof domLabels[ui.node.id] === "undefined") {
+                    const label = document.createElement('span');
+                    label.classList.add('node-label');
+                    label.classList.add('toggleNodeVisibility');
+                    label.innerText = ui.node.id;
+                    document.getElementById('graphContainer').appendChild(label);
+                    domLabels[ui.node.id] = label;
+                }
+
+                // create a copy of layout position
+                const domPos = {
+                    x: pos.x,
+                    y: pos.y
+                };
+
+                // And ask graphics to transform it to DOM coordinates:
+                graphics.transformGraphToClientCoordinates(domPos);
+
+                var nodeId = ui.node.id;
+                var labelStyle = domLabels[nodeId].style;
+                labelStyle.left = (domPos.x -20) + 'px';
+                labelStyle.top = (domPos.y - 10) + 'px';
+            });
+
+
             const renderer = Viva.Graph.View.renderer(graph,
                 {
                     graphics: graphics,
@@ -62,10 +107,10 @@
     </script>
 </head>
 
-<body>
-<div class="container">
-    <div class="row  mt-3 mb-3">
-        <div class="col">
+<body onload="toggleLabels()">
+<div class="container top-row mt-3 mb-3">
+    <div class="row">
+        <div class="col  mt-3 mb-3">
             <div class="form-floating">
                 <input type="text" id="packageInput" class="form-control" placeholder="">
                 <label for="packageInput">Package</label>
@@ -73,7 +118,7 @@
                 <span id="ErrorMessageBox" class="mt-2"></span>
             </div>
         </div>
-        <div class="col">
+        <div class="col  mt-3 mb-3">
             <div class="row">
                 <label for="includeOptionalDepsCheckbox">
                     <input type="checkbox" id="includeOptionalDepsCheckbox">
@@ -84,6 +129,14 @@
                 <label for="includeMakeDepsCheckbox">
                     <input type="checkbox" id="includeMakeDepsCheckbox">
                     Include make dependencies
+                </label>
+            </div>
+        </div>
+        <div class="col  mt-3 mb-3">
+            <div class="row">
+                <label for="ShowLabels">
+                    <input type="checkbox" id="ShowLabels" onclick="toggleLabels()">
+                    Display node labels
                 </label>
             </div>
         </div>

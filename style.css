@@ -7,25 +7,42 @@ body {
     background-color: #1d1d1d;
 }
 
-#packageInput{
+#packageInput {
     background-color: #414141;
     border: #717171;
     color: #e1e1e1;
 }
 
-label{
+label {
     color: #e1e1e1;
 }
 
 html,
 body,
-canvas,
-#graphContainer {
+canvas{
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+    margin: 0;
+    position: absolute;
 }
 
-#ErrorMessageBox{
+#ErrorMessageBox {
     margin-left: 2em;
     color: #800100;
+}
+
+
+.node-label {
+    position: absolute;
+    pointer-events: none;
+    color: white;
+    z-index: 1;
+}
+
+.top-row {
+    z-index: 10;
+    background-color: inherit;
+    position: sticky;
 }
