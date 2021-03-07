@@ -94,6 +94,13 @@
                 const labelHeight = domLabels[nodeId].offsetHeight;
                 labelStyle.left = (domPos.x - labelWidth / 2) + 'px';
                 labelStyle.top = (domPos.y - labelHeight / 2) + 'px';
+
+                //check there is nothing undefined being accessed
+                if (typeof ui.node.data !== "undefined"
+                    && ui.node.data['repository'] !== "undefined"
+                    && !labelStyle.hasOwnProperty('color')) {
+                    labelStyle.color = repoToColor(ui.node.data['repository']);
+                }
             });
 
 
@@ -105,6 +112,19 @@
                 });
 
             renderer.run();
+        }
+
+        function repoToColor(repository) {
+            switch (repository) {
+                case 'extra':
+                    return '#5baa00'
+                case 'core':
+                    return "#008bc6"
+                case 'community':
+                    return '#b90000'
+                default:
+                    return '#ffffff'
+            }
         }
     </script>
 </head>
