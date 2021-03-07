@@ -88,10 +88,12 @@
                 // And ask graphics to transform it to DOM coordinates:
                 graphics.transformGraphToClientCoordinates(domPos);
 
-                var nodeId = ui.node.id;
-                var labelStyle = domLabels[nodeId].style;
-                labelStyle.left = (domPos.x -20) + 'px';
-                labelStyle.top = (domPos.y - 10) + 'px';
+                const nodeId = ui.node.id;
+                const labelStyle = domLabels[nodeId].style;
+                const labelWidth = domLabels[nodeId].offsetWidth;
+                const labelHeight = domLabels[nodeId].offsetHeight;
+                labelStyle.left = (domPos.x - labelWidth / 2) + 'px';
+                labelStyle.top = (domPos.y - labelHeight / 2) + 'px';
             });
 
 
