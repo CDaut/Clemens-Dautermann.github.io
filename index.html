@@ -137,7 +137,7 @@
                 <input type="text" id="packageInput" class="form-control" placeholder="">
                 <label for="packageInput">Package</label>
                 <button type="button" id="searchbutton" class="btn btn-primary mt-2">Draw</button>
-                <span id="ErrorMessageBox" class="mt-2"></span>
+                <p id="ErrorMessageBox" class="mt-2"></p>
             </div>
         </div>
         <div class="col  mt-3 mb-3">
@@ -160,6 +160,14 @@
                     <input type="checkbox" id="ShowLabels" onclick="toggleLabels()">
                     Display node labels
                 </label>
+            </div>
+        </div>
+        <div class="col  mt-3 mb-3">
+            <div class="row">
+                <span style="color: #008bc6">Core packages</span>
+                <span style="color: #5baa00">Extra packages</span>
+                <span style="color: #b90000">Community packages</span>
+                <span style="color: #ffffff">Unresolvable packages (most likely .so files)</span>
             </div>
         </div>
     </div>

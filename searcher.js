@@ -25,7 +25,7 @@ async function getNodeJSON(pPackageName) {
 
             return json['results'][0];
         })
-        .catch(error => {
+        .catch(() => {
                 //log the error
                 console.error(`cannot resolve package ${packageName}`);
                 //if this was the root package search, set the error message box
@@ -73,29 +73,29 @@ async function addSubteree(rootNode, graph, cache) {
 
     //retrieve node JSON
     getNodeJSON(rootNode).then((nodeJSON) => {
+        if (nodeJSON.hasOwnProperty('depends')) {
+            const dependencies = getDepsFromJSON(nodeJSON);
+            //add the node to the graph while replacing the unnecessary additional text
+            graph.addNode(rootNode.replace(/:\s.*/, ''),
+                JSON.parse(`{"repository": "${nodeJSON['repo']}"}`));
 
-        const dependencies = getDepsFromJSON(nodeJSON);
-        //add the node to the graph while replacing the unnecessary additional text
-        graph.addNode(rootNode.replace(/:\s.*/, ''),
-            JSON.parse(`{"repository": "${nodeJSON['repo']}"}`));
+            //iterate over all those dependencies
+            for (const dependency of dependencies) {
 
-        //iterate over all those dependencies
-        for (const dependency of dependencies) {
+                //check if the dependency is cached (if the subtree has already been drawn for it
+                if (!cache.has(dependency)) {
+                    //add a link from the rootnode to that dependency
+                    graph.addLink(rootNode, dependency);
 
-            //check if the dependency is cached (if the subtree has already been drawn for it
-            if (!cache.has(dependency)) {
-                //add a link from the rootnode to that dependency
-                graph.addLink(rootNode, dependency);
-
-                //initiate recursive call to build subtree for that dependency
-                addSubteree(
-                    dependency,
-                    graph,
-                    cache
-                );
-
-                //add the dependency to the cache so that in the next loop iteration it will not be handled again
-                cache.add(dependency);
+                    //initiate recursive call to build subtree for that dependency
+                    addSubteree(
+                        dependency,
+                        graph,
+                        cache
+                    );
+                    //add the dependency to the cache so that in the next loop iteration it will not be handled again
+                    cache.add(dependency);
+                }
             }
         }
     });
