@@ -8,15 +8,15 @@ async function getNodeJSON(pPackageName) {
 
     //make the fetch request
     return fetch(
-        //set the appropriate settings
-        proxy + "https://archlinux.org/packages/search/json/?name=" + packageName, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Accept': 'application/json',
+            //set the appropriate settings
+            proxy + "https://archlinux.org/packages/search/json/?name=" + packageName, {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Accept': 'application/json',
+                }
             }
-        }
-    )
+        )
         //make the response into json first
         .then(response => response.json())
         .then(json => {
@@ -26,17 +26,16 @@ async function getNodeJSON(pPackageName) {
             return json['results'][0];
         })
         .catch(() => {
-                //log the error
-                console.error(`cannot resolve package ${packageName}`);
-                //if this was the root package search, set the error message box
-                if (packageName === document.getElementById('packageInput').value) {
-                    document.getElementById('ErrorMessageBox').innerText =
-                        `cannot resolve package "${packageName}"`;
-                }
-                //return an empty set so that iterating in the recursion will not break
-                return new Set();
+            //log the error
+            console.error(`cannot resolve package ${packageName}`);
+            //if this was the root package search, set the error message box
+            if (packageName === document.getElementById('packageInput').value) {
+                document.getElementById('ErrorMessageBox').innerText =
+                    `cannot resolve package "${packageName}"`;
             }
-        );
+            //return an empty set so that iterating in the recursion will not break
+            return new Set();
+        });
 }
 
 function getDepsFromJSON(json) {
@@ -69,7 +68,7 @@ function getDepsFromJSON(json) {
     return allDeps;
 }
 
-async function addSubteree(rootNode, graph, cache) {
+async function addSubtree(rootNode, graph, cache) {
 
     //retrieve node JSON
     getNodeJSON(rootNode).then((nodeJSON) => {
@@ -82,13 +81,21 @@ async function addSubteree(rootNode, graph, cache) {
             //iterate over all those dependencies
             for (const dependency of dependencies) {
 
-                //check if the dependency is cached (if the subtree has already been drawn for it
-                if (!cache.has(dependency)) {
+                //check if circular dependencies are allowd
+                if (document.getElementById('allowCircularDependencies').checked) {
                     //add a link from the rootnode to that dependency
                     graph.addLink(rootNode, dependency);
+                } else {
+                    if (!cache.has(dependency)) {
+                        graph.addLink(rootNode, dependency);
+                    }
+                }
+
+                //check if the dependency is cached (if the subtree has already been drawn for it
+                if (!cache.has(dependency)) {
 
                     //initiate recursive call to build subtree for that dependency
-                    addSubteree(
+                    addSubtree(
                         dependency,
                         graph,
                         cache

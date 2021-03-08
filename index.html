@@ -7,8 +7,7 @@
         Arch package viz
     </title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
@@ -54,19 +53,18 @@
 
             graph.addNode(packageName);
 
-            await addSubteree(packageName, graph, new Set());
+            await addSubtree(packageName, graph, new Set());
 
             let domLabels = new Set();
 
             // Set custom nodes appearance
             const graphics = Viva.Graph.View.webglGraphics();
-            const layout = Viva.Graph.Layout.forceDirected(graph,
-                {
-                    springLength: 0.2,
-                    springCoeff: 0.0001,
-                    dragCoeff: 0.01,
-                    gravity: -5
-                });
+            const layout = Viva.Graph.Layout.forceDirected(graph, {
+                springLength: 1,
+                springCoeff: 0.0001,
+                dragCoeff: 0.01,
+                gravity: -7
+            });
 
             graphics.placeNode((ui, pos) => {
 
@@ -96,20 +94,19 @@
                 labelStyle.top = (domPos.y - labelHeight / 2) + 'px';
 
                 //check there is nothing undefined being accessed
-                if (typeof ui.node.data !== "undefined"
-                    && ui.node.data['repository'] !== "undefined"
-                    && !labelStyle.hasOwnProperty('color')) {
+                if (typeof ui.node.data !== "undefined" &&
+                    ui.node.data['repository'] !== "undefined" &&
+                    !labelStyle.hasOwnProperty('color')) {
                     labelStyle.color = repoToColor(ui.node.data['repository']);
                 }
             });
 
 
-            const renderer = Viva.Graph.View.renderer(graph,
-                {
-                    graphics: graphics,
-                    layout: layout,
-                    container: document.getElementById('graphContainer')
-                });
+            const renderer = Viva.Graph.View.renderer(graph, {
+                graphics: graphics,
+                layout: layout,
+                container: document.getElementById('graphContainer')
+            });
 
             renderer.run();
         }
@@ -132,60 +129,64 @@
 </head>
 
 <body onload="toggleLabels()">
-<div class="container top-row mt-3 mb-3">
-    <div class="row">
-        <div class="col  mt-3 mb-3">
-            <div class="form-floating">
-                <input type="text" id="packageInput" class="form-control" placeholder="">
-                <label for="packageInput">Package</label>
-                <button type="button" id="searchbutton" class="btn btn-primary mt-2">Draw</button>
-                <p id="ErrorMessageBox" class="mt-2"></p>
+    <div class="container top-row mt-3 mb-3">
+        <div class="row">
+            <div class="col  mt-3 mb-3">
+                <div class="form-floating">
+                    <input type="text" id="packageInput" class="form-control" placeholder="">
+                    <label for="packageInput">Package</label>
+                    <button type="button" id="searchbutton" class="btn btn-primary mt-2">Draw</button>
+                    <p id="ErrorMessageBox" class="mt-2"></p>
+                </div>
             </div>
-        </div>
-        <div class="col  mt-3 mb-3">
-            <div class="row">
-                <label for="includeOptionalDepsCheckbox">
+            <div class="col  mt-3 mb-3">
+                <div class="row">
+                    <label for="includeOptionalDepsCheckbox">
                     <input type="checkbox" id="includeOptionalDepsCheckbox">
                     Include optional dependencies
                 </label>
-            </div>
-            <div class="row">
-                <label for="includeMakeDepsCheckbox">
+                </div>
+                <div class="row">
+                    <label for="includeMakeDepsCheckbox">
                     <input type="checkbox" id="includeMakeDepsCheckbox">
                     Include make dependencies
                 </label>
+                </div>
+                <div class="row">
+                    <label for="allowCircularDependencies">
+                    <input type="checkbox" id="allowCircularDependencies">
+                    Allow circular dependencies
+                </label>
+                </div>
             </div>
-        </div>
-        <div class="col  mt-3 mb-3">
-            <div class="row">
-                <label for="ShowLabels">
+            <div class="col  mt-3 mb-3">
+                <div class="row">
+                    <label for="ShowLabels">
                     <input type="checkbox" id="ShowLabels" onclick="toggleLabels()">
                     Display node labels
                 </label>
-            </div>
-        </div>
-        <div class="col  mt-3 mb-3">
-            <div class="row">
-                <div class="col">
-                    <span style="color: #008bc6">Core packages</span>
-                    <span style="color: #5baa00">Extra packages</span>
-                    <span style="color: #b90000">Community packages</span>
                 </div>
-                <div class="col">
-                    <span style="color: #d07603">Multilib packages</span>
-                    <span style="color: #ffffff">Unresolvable packages (most likely .so files)</span>
+            </div>
+            <div class="col  mt-3 mb-3">
+                <div class="row">
+                    <div class="col">
+                        <span style="color: #008bc6">Core packages</span>
+                        <span style="color: #5baa00">Extra packages</span>
+                        <span style="color: #b90000">Community packages</span>
+                    </div>
+                    <div class="col">
+                        <span style="color: #d07603">Multilib packages</span>
+                        <span style="color: #ffffff">Unresolvable packages (most likely .so files)</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="container-fluid" id="graphContainer">
+    <div class="container-fluid" id="graphContainer">
 
-</div>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 </body>
 
 </html>
