@@ -1,7 +1,23 @@
 async function getNodeJSON(pPackageName) {
 
+    //this table contains manual mapping for packages that are provided by packages
+    //that have another name (fore some reason)
+    let manualLookupTable = {
+        'initramfs': 'mkinitcpio',
+        'sh': 'bash',
+        'awk': 'gawk',
+        'udev': 'systemd',
+        'libltdl': 'libtool',
+        'libjpeg': 'libjpeg-turbo',
+        'opengl-driver': 'mesa'
+    }
+
     //remove version declarations and comments because the api cannot handle that
     let packageName = pPackageName.replace(/(>|>=|=).*/, '').replace(/:\s.*/, '');
+
+    //redefine the package name using manual lookups if necerssary
+    if (typeof manualLookupTable[packageName] !== 'undefined')
+        packageName = manualLookupTable[packageName];
 
     //TODO: Once the bug is fixed, this should work without CORS Proxy
     const proxy = 'https://archviz-proxy.herokuapp.com/'
