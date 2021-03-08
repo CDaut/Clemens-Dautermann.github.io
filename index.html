@@ -68,38 +68,41 @@
 
             graphics.placeNode((ui, pos) => {
 
-                if (typeof domLabels[ui.node.id] === "undefined") {
-                    const label = document.createElement('span');
-                    label.classList.add('node-label');
-                    label.classList.add('toggleNodeVisibility');
-                    label.innerText = ui.node.id;
-                    document.getElementById('graphContainer').appendChild(label);
-                    domLabels[ui.node.id] = label;
-                }
+                    if (typeof domLabels[ui.node.id] === "undefined") {
+                        const label = document.createElement('span');
+                        label.classList.add('node-label');
+                        label.classList.add('toggleNodeVisibility');
+                        label.innerText = ui.node.id;
+                        document.getElementById('graphContainer').appendChild(label);
+                        domLabels[ui.node.id] = label;
+                    }
 
-                // create a copy of layout position
-                const domPos = {
-                    x: pos.x,
-                    y: pos.y
-                };
+                    // create a copy of layout position
+                    const domPos = {
+                        x: pos.x,
+                        y: pos.y
+                    };
 
-                // And ask graphics to transform it to DOM coordinates:
-                graphics.transformGraphToClientCoordinates(domPos);
+                    // And ask graphics to transform it to DOM coordinates:
+                    graphics.transformGraphToClientCoordinates(domPos);
 
-                const nodeId = ui.node.id;
-                const labelStyle = domLabels[nodeId].style;
-                const labelWidth = domLabels[nodeId].offsetWidth;
-                const labelHeight = domLabels[nodeId].offsetHeight;
-                labelStyle.left = (domPos.x - labelWidth / 2) + 'px';
-                labelStyle.top = (domPos.y - labelHeight / 2) + 'px';
+                    const nodeId = ui.node.id;
+                    const labelStyle = domLabels[nodeId].style;
+                    const labelWidth = domLabels[nodeId].offsetWidth;
+                    const labelHeight = domLabels[nodeId].offsetHeight;
+                    labelStyle.left = (domPos.x - labelWidth / 2) + 'px';
+                    labelStyle.top = (domPos.y - labelHeight / 2) + 'px';
 
-                //check there is nothing undefined being accessed
-                if (typeof ui.node.data !== "undefined" &&
-                    ui.node.data['repository'] !== "undefined" &&
-                    !labelStyle.hasOwnProperty('color')) {
-                    labelStyle.color = repoToColor(ui.node.data['repository']);
-                }
-            });
+                    //check there is nothing undefined being accessed
+                    if (typeof ui.node.data !== "undefined" &&
+                        ui.node.data['repository'] !== "undefined" &&
+                        !labelStyle.hasOwnProperty('color')) {
+                        labelStyle.color = repoToColor(ui.node.data['repository']);
+                    }
+                })
+                .node(node => {
+                    return Viva.Graph.View.webglSquare(5, '#666666')
+                });
 
 
             const renderer = Viva.Graph.View.renderer(graph, {
